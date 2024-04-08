@@ -37,7 +37,7 @@ public class SecurityConfig {
         // cors - sross origin
 
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(null))
+            .cors(cors -> cors.configurationSource(corsConfiguration()))
             .authorizeHttpRequests(authorize -> authorize
                             .requestMatchers(WHITELIST)
                             .permitAll()

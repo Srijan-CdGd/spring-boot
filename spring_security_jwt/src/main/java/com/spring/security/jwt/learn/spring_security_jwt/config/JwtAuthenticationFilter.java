@@ -30,10 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final TokenRepository tokenRepository;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
+    protected void doFilterInternal(
+            @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
+
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         final String token;
         final String username;
@@ -52,7 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             var isTokenValid = tokenRepository.findByToken(token).map(t -> !t.isExpired() && !t.isRevoked())
                     .orElse(false);
 
-            if (jwtUtil.isTokenValid(token, userDetails)) {
+            if (jwtUtil.isTokenValid(token, userDetails) && isTokenValid) {
                 // credentials can be added if we want then inside our token
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userDetails, null, userDetails.getAuthorities());
